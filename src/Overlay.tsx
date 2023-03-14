@@ -45,7 +45,7 @@ export const Overlay = () => {
 
   const timeInSeconds = frameToSeconds(frame, fps);
 
-  // console.log(timeInSeconds, "timesec")
+  // Console.log(timeInSeconds, "timesec")
 
   const scale = spring({
     fps,
@@ -72,7 +72,7 @@ export const Overlay = () => {
     const input = prompt('Enter hashtag:');
     const id = uuidv4();
     if (input) {
-      let dave = input.toString();
+      const dave = input.toString();
       const newTag = { videoId: id, hashTag: dave, timeStamp: timeInSeconds };
       setUserInput(newTag);
       setArrayOfTags(prevState => [...prevState, newTag]);
@@ -104,9 +104,7 @@ export const Overlay = () => {
   }, [userInput]);
   
   useEffect(() => {
-    arrayOfTags.forEach((tag, index) => {
-      console.log(`Tag ${index}:`, tag);
-    });
+ console.log(arrayOfTags, '<-- all tags')
   }, [arrayOfTags]);
   
   
