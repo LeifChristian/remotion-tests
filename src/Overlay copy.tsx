@@ -1,7 +1,14 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import React, { useMemo, useState, useEffect } from 'react';
+import {
+  AbsoluteFill,
+  interpolate,
+  spring,
+  useCurrentFrame,
+  useVideoConfig,
+} from 'remotion';
+
+import React, { useMemo, useState } from 'react';
 import { loadFont } from '@remotion/google-fonts/Roboto';
-import { v4 as uuidv4 } from 'uuid';
+
 
 
 const { fontFamily } = loadFont();
@@ -20,32 +27,18 @@ const text: React.CSSProperties = {
 };
 
 const disappearBeforeEnd = 20;
+const fred = 9;
 const overlayStartTime = 10;
-
-
-export const Overlay = () => {
-
+export const Overlay: React.FC<{fred: number}> = ({fred}) => {
+  console.log(fred);
   const [first, setFirst] = useState(0);
   const [myVideoDuration, setMyVideoDuration] = useState(75);
-  const [userInput, setUserInput] = useState({});
-  const [arrayOfTags, setArrayOfTags] = useState([])
   const alertMe = () => {
     console.log('hello');
   };
 
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
-
-  useEffect(() => {
-}, [userInput, arrayOfTags]);
-
-  function frameToSeconds(frame: number, fps: number) {
-    return frame / fps;
-  }
-
-  const timeInSeconds = frameToSeconds(frame, fps);
-
-  // console.log(timeInSeconds, "timesec")
 
   const scale = spring({
     fps,
@@ -66,18 +59,7 @@ export const Overlay = () => {
 
   const rotate = interpolate(out, [0, 1], [0, -Math.PI / 20]);
   const outY = interpolate(out, [0, 1], [0, -500]);
-  
-
-  const doThings = () => {
-    const input = prompt('Enter hashtag:');
-    const id = uuidv4();
-    if (input) {
-      let dave = input.toString();
-      const newTag = { videoId: id, hashTag: dave, timeStamp: timeInSeconds };
-      setUserInput(newTag);
-      setArrayOfTags(prevState => [...prevState, newTag]);
-    }
-  };
+  const wasClicked = () => {alert('hello')}
 
   const container: React.CSSProperties = useMemo(() => {
     return {
@@ -93,40 +75,25 @@ export const Overlay = () => {
     };
   }, [scale, outY, rotate]);
 
+  const tagChange =
+    frame >= overlayStartTime && frame < overlayStartTime + disappearBeforeEnd;
 
-
-  const tagChange = frame >= overlayStartTime && frame < overlayStartTime + disappearBeforeEnd;
-
-  useEffect(() => {
-    if (userInput?.hashTag) {
-      console.log(userInput, 'stamped Object');
-    }
-  }, [userInput]);
-  
-  useEffect(() => {
-    arrayOfTags.forEach((tag, index) => {
-      console.log(`Tag ${index}:`, tag);
-    });
-  }, [arrayOfTags]);
-  
-  
   return (
     <div>
       <button
         id="2"
         style={{
           position: 'absolute',
-         height: '100vh',
-         width: '100vw',
+          top: 0,
+          left: 0,
           zIndex: 200,
-          fontSize: '90rem',
+          fontSize: '4rem',
           fontWeight: 'bold',
           color: 'red',
-        opacity: 0
         }}
-        onClick={() => doThings()}
+        onClick={() => console.log('Button clicked')}
       >
-        DOOOOOOOOODDDDDDD
+        Click me!
       </button>
 
       {tagChange ? (
