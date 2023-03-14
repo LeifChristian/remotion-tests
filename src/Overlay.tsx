@@ -30,7 +30,7 @@ export const Overlay = () => {
   const [userInput, setUserInput] = useState({});
   const [arrayOfTags, setArrayOfTags] = useState([])
   const alertMe = () => {
-    console.log('hello');
+
   };
 
   const frame = useCurrentFrame();
@@ -71,9 +71,11 @@ export const Overlay = () => {
   const doThings = () => {
     const input = prompt('Enter hashtag:');
     const id = uuidv4();
+    const videoId = id.substring(0, 5);
+
     if (input) {
       const dave = input.toString();
-      const newTag = { videoId: id, hashTag: dave, timeStamp: timeInSeconds };
+      const newTag = {hashTag: dave, timeStamp: timeInSeconds, videoId: videoId};
       setUserInput(newTag);
       setArrayOfTags(prevState => [...prevState, newTag]);
     }
@@ -104,7 +106,7 @@ export const Overlay = () => {
   }, [userInput]);
   
   useEffect(() => {
- console.log(arrayOfTags, '<-- all tags')
+ arrayOfTags.length ? console.log(arrayOfTags, '<-- all tags') : ''
   }, [arrayOfTags]);
   
   
@@ -124,7 +126,6 @@ export const Overlay = () => {
         }}
         onClick={() => doThings()}
       >
-        DOOOOOOOOODDDDDDD
       </button>
 
       {tagChange ? (

@@ -5,8 +5,7 @@
   "scripts": {
     "start": "remotion preview",
     "build": "remotion render",
-    "upgrade": "remotion upgrade",
-    "test": "eslint src --ext ts,tsx,js,jsx && tsc"
+    "upgrade": "remotion upgrade"
   },
   "repository": {},
   "license": "UNLICENSED",
@@ -19,10 +18,8 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@remotion/eslint-config": "3.3.65",
     "@types/react": "^18.0.26",
     "@types/web": "^0.0.86",
-    "eslint": "^8.30.0",
     "prettier": "^2.8.1",
     "typescript": "^4.9.4"
   },
