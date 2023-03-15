@@ -1,7 +1,9 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Video } from 'remotion';
 import React, { useMemo, useState, useEffect } from 'react';
 import { loadFont } from '@remotion/google-fonts/Roboto';
 import { v4 as uuidv4 } from 'uuid';
+import myVideoSrc from './sample-5s.mp4'
+import { PlayerRef } from '@remotion/player';
 
 
 const { fontFamily } = loadFont();
@@ -80,6 +82,7 @@ export const Overlay = () => {
       setArrayOfTags(prevState => [...prevState, newTag]);
     }
   };
+  
 
   const container: React.CSSProperties = useMemo(() => {
     return {
@@ -127,7 +130,15 @@ export const Overlay = () => {
         onClick={() => doThings()}
       >
       </button>
-
+      <Video // Add the Video component
+        src={myVideoSrc}
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}
+      />
       {tagChange ? (
         <AbsoluteFill>
           <div style={container}>
