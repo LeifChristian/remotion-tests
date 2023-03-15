@@ -103,7 +103,7 @@ export const RemotionRoot: React.FC = () => {
         style={{
           position: 'absolute',
           zIndex: 3000,
-          top: 520,
+          top: 578,
           left,
           width,
           height: '3rem',
