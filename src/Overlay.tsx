@@ -4,6 +4,8 @@ import { loadFont } from '@remotion/google-fonts/Roboto';
 import { v4 as uuidv4 } from 'uuid';
 import myVideoSrc from './sample-5s.mp4'
 import { PlayerRef } from '@remotion/player';
+import { useContext } from 'react';
+import ClickEventContext from './ClickEventContext';
 
 
 const { fontFamily } = loadFont();
@@ -25,21 +27,50 @@ const disappearBeforeEnd = 20;
 const overlayStartTime = 10;
 
 
-export const Overlay = () => {
+export const Overlay = ({ tags }) => {
+
+  console.log(tags, 'tags')
 
   const [first, setFirst] = useState(0);
   const [myVideoDuration, setMyVideoDuration] = useState(75);
   const [userInput, setUserInput] = useState({});
-  const [arrayOfTags, setArrayOfTags] = useState([])
+  const [arrayOfTags, setArrayOfTags] = useState([...tags])
   const alertMe = () => {
 
   };
 
+  const handleClick = (event: MouseEvent) => {
+    console.log('hi')
+
+  };
+
+  // Overlay component
+
+
+  const onEventEmit = useContext(ClickEventContext);
+
+// const emitEvent = (arrayOfTag) => {
+
+//   // console.log(arrayOfTags)
+//   // console.log(arrayOfTas)
+//   onEventEmit(arrayOfTag);
+// };
+// Overlay component
+
+useEffect(() => {
+
+  onEventEmit(arrayOfTags)
+
+  return () => {
+    document.removeEventListener('click', () =>onEventEmit(arrayOfTags));
+  };
+}, [arrayOfTags]);
+
+
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
 
-  useEffect(() => {
-}, [userInput, arrayOfTags]);
+
 
   function frameToSeconds(frame: number, fps: number) {
     return frame / fps;
@@ -77,9 +108,18 @@ export const Overlay = () => {
 
     if (input) {
       const dave = input.toString();
-      const newTag = {hashTag: dave, timeStamp: timeInSeconds, videoId: videoId};
+      const newTag = {
+        "id": `${input.toString()}`,
+        component: Overlay,
+        "durationInFrames": 75,
+        "fps": 30,
+        "width": 1920,
+        "height": 1080
+    }
       setUserInput(newTag);
       setArrayOfTags(prevState => [...prevState, newTag]);
+      onEventEmit(arrayOfTags)
+      console.log(arrayOfTags)
     }
   };
   
@@ -102,11 +142,6 @@ export const Overlay = () => {
 
   const tagChange = frame >= overlayStartTime && frame < overlayStartTime + disappearBeforeEnd;
 
-  useEffect(() => {
-    if (userInput?.hashTag) {
-      console.log(userInput, 'stamped Object');
-    }
-  }, [userInput]);
   
   useEffect(() => {
  arrayOfTags.length ? console.log(arrayOfTags, '<-- all tags') : ''
@@ -121,8 +156,8 @@ export const Overlay = () => {
           position: 'absolute',
          height: '100vh',
          width: '100vw',
-          zIndex: 200,
-          fontSize: '90rem',
+          zIndex: 2000000,
+          fontSize: '900rem',
           fontWeight: 'bold',
           color: 'red',
         opacity: 0
