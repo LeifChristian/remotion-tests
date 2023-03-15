@@ -5,6 +5,8 @@ import { Overlay } from './Overlay';
 export const RemotionRoot: React.FC = () => {
   const [width, setWidth] = useState(200);
   const [left, setLeft] = useState(229);
+  const [selectedCompositionId, setSelectedCompositionId] = useState(null);
+  const [sliderColor, setSliderColor] = useState('red');
 
   const handleMouseDown = (e) => {
     e.stopPropagation();
@@ -47,6 +49,25 @@ export const RemotionRoot: React.FC = () => {
     console.log('api call here');
   };
 
+  const handleCompositionClick = (id, e) => {
+    e.stopPropagation();
+    setSelectedCompositionId(id);
+
+    // Set the slider color based on the selected composition
+    switch (id) {
+      case 'cars':
+        setSliderColor('blue');
+        break;
+      case 'trees':
+        setSliderColor('green');
+        break;
+      case 'bus':
+        setSliderColor('red');
+        break;
+      default:
+        setSliderColor('red');
+    }
+  };
   const compositions = [
     {
       id: 'cars',
@@ -86,37 +107,46 @@ export const RemotionRoot: React.FC = () => {
           left,
           width,
           height: '3rem',
-          backgroundColor: 'red',
+          backgroundColor: sliderColor,
           borderRadius: '10px',
         }}
         onMouseDown={handleDragMouseDown}
       >
+        {/* Add the missing arrow and bar for the left side of the slider */}
         <div
           style={{
             position: 'absolute',
-            top: 0,
+            top: '50%',
             left: -6,
             width: 12,
             height: '100%',
             backgroundColor: 'transparent',
             cursor: 'col-resize',
+            transform: 'translateY(-50%)',
           }}
           onMouseDown={handleMouseDown}
         ></div>
       </div>
-      <Folder name="relevant-videos">
-        {compositions.map((comp) => (
-          <Composition
-            key={comp.id}
-            id={comp.id}
-            component={comp.component}
-            durationInFrames={comp.durationInFrames}
-            fps={comp.fps}
-            width={comp.width}
-            height={comp.height}
-          />
-        ))}
-      </Folder>
+      <div onClick={(e) => e.stopPropagation()}>
+        <Folder name="relevant-videos">
+          {compositions.map((comp) => (
+            <div 
+              key={comp.id}
+              onClick={(e) => handleCompositionClick(comp.id, e)}
+              style={{ position: 'absolute' }}
+            >
+              <Composition
+                id={comp.id}
+                component={comp.component}
+                durationInFrames={comp.durationInFrames}
+                fps={comp.fps}
+                width={comp.width}
+                height={comp.height}
+              />
+            </div>
+          ))}
+        </Folder>
+      </div>
     </div>
   );
 };
