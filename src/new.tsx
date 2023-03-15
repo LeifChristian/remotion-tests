@@ -5,6 +5,8 @@ import { Overlay } from './Overlay';
 export const RemotionRoot: React.FC = () => {
   const [width, setWidth] = useState(200);
   const [left, setLeft] = useState(300);
+  const [selectedCompositionId, setSelectedCompositionId] = useState(null);
+
 
   const handleMouseDown = (e) => {
     e.stopPropagation();
@@ -76,47 +78,61 @@ export const RemotionRoot: React.FC = () => {
     // Add more compositions as needed
   ];
 
+  const handleCompositionClick = (id, e) => {
+    e.stopPropagation();
+    setSelectedCompositionId(id);
+  };
+  
   return (
-    <div onClick={sendStuff}>
-      <div
-        style={{
-          position: 'absolute',
-          zIndex: 3000,
-          top: 520,
-          left,
-          width,
-          height: '3rem',
-          backgroundColor: 'red',
-          borderRadius: '10px',
-        }}
-        onMouseDown={handleDragMouseDown}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: -6,
-            width: 12,
-            height: '100%',
-            backgroundColor: 'transparent',
-            cursor: 'col-resize',
-          }}
-          onMouseDown={handleMouseDown}
-        ></div>
-      </div>
+    <div>
       <Folder name="relevant-videos">
         {compositions.map((comp) => (
-          <Composition
+          <div
             key={comp.id}
-            id={comp.id}
-            component={comp.component}
-            durationInFrames={comp.durationInFrames}
-            fps={comp.fps}
-            width={comp.width}
-            height={comp.height}
-          />
+            onClick={(e) => handleCompositionClick(comp.id, e)}
+            style={{ position: 'relative' }}
+          >
+            <Composition
+              id={comp.id}
+              component={comp.component}
+              durationInFrames={comp.durationInFrames}
+              fps={comp.fps}
+              width={comp.width}
+              height={comp.height}
+            />
+            {selectedCompositionId === comp.id && (
+              <div
+                style={{
+                  position: 'absolute',
+                  zIndex: 9999,
+                  top: 0, // Updated top position
+                  left,
+                  width,
+                  height: '3rem',
+                  backgroundColor: 'red',
+                  borderRadius: '10px',
+                }}
+                onMouseDown={handleDragMouseDown}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: -6,
+                    width: 12,
+                    height: '100%',
+                    backgroundColor: 'blue',
+                    cursor: 'col-resize',
+                  }}
+                  onMouseDown={handleMouseDown}
+                ></div>
+              </div>
+            )}
+          </div>
         ))}
       </Folder>
     </div>
   );
+  
+
 };
