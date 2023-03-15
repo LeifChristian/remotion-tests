@@ -27,8 +27,7 @@ const disappearBeforeEnd = 20;
 const overlayStartTime = 10;
 
 
-export const Overlay = ({ tags, theText }) => {
-
+export const Overlay = ({ tags, theText, index }) => {
   const [first, setFirst] = useState(0);
   const [myVideoDuration, setMyVideoDuration] = useState(75);
   const [userInput, setUserInput] = useState({});

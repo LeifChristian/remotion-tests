@@ -147,16 +147,12 @@ const [theText, setText] = useState('')
 
 const [theOpacity, setOpacity] = useState('')
 
+const [currentIndex, setCurrentIndex] = useState(0)
 
-
-
-  const handleChildEvent = (data, sliderValues, currentId) => {
+  const handleChildEvent = (data) => {
     console.log('Event emitted from child:', data);
     setCompositions(data)
-
-
     return compositionss
-
   };
 
   const handleMouseDown = (e) => {
@@ -176,7 +172,13 @@ const [theOpacity, setOpacity] = useState('')
   const handleMouseUp = () => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
+  
+    const sliderDuration = 3; // replace with the actual duration of your slider
+    const startTime = (left / window.innerWidth) * sliderDuration;
+    const endTime = ((left + width) / window.innerWidth) * sliderDuration;
+  console.log(theText, '<-- the tag to be updated', compositionss[currentIndex], 'id')
     console.log(`Slider start position: ${left}px, end position: ${left + width}px`);
+    console.log(`Start time: ${startTime}s, end time: ${endTime}s`);
   };
   
   const handleDragMouseDown = (e) => {
@@ -190,26 +192,36 @@ const [theOpacity, setOpacity] = useState('')
     if (newLeft >= 229 && newLeft + width <= window.innerWidth) {
       setLeft(newLeft);
       console.log(`Slider start position: ${left}px, end position: ${left + width}px`);
+      console.log(theText, '<-- the tag to be updated', compositionss[currentIndex], 'id')
     }
   };
   
   const handleDragMouseUp = () => {
     document.removeEventListener('mousemove', handleDragMouseMove);
     document.removeEventListener('mouseup', handleDragMouseUp);
+  
+    const sliderDuration = 3; // replace with the actual duration of your slider
+    const startTime = (left / window.innerWidth) * sliderDuration;
+    const endTime = ((left + width) / window.innerWidth) * sliderDuration;
+    console.log(theText, '<-- the tag to be updated', compositionss[currentIndex], 'id')
     console.log(`Slider start position: ${left}px, end position: ${left + width}px`);
+    console.log(`Start time: ${startTime}s, end time: ${endTime}s`);
   };
 
   const sendStuff = () => {
     console.log('api call here');
   };
-
-
   const handleCompositionClick = (id, e) => {
     e.stopPropagation();
-  setText(id)
-
+    setText(id);
+  
+    // Find the index of the composition with the given id
+    const index = compositionss.findIndex((comp) => comp.id.toLowerCase() === id.toLowerCase());
+  
+    // Update the currentIndex state variable
+    setCurrentIndex(index);
   };
-
+  
 
   const handleDelete = (id) => {
     // Show a confirm prompt to the user
@@ -237,12 +249,14 @@ const [theOpacity, setOpacity] = useState('')
   return (
     <div onClick={sendStuff}>
       {/* <div style={{height: '42vh', width: '16vw', zIndex: 3000000, background: '#1F2428', color: 'silver', position: "absolute", top: 140}}>mike</div> */}
-      <ul style={{ height: '42vh', width: '16vw', listStyle: "none", zIndex: 3000000, background: '#1F2428', color: 'silver', position: "absolute", top: 140, borderRadius: '.6em', opacity: 0.9}}>
+      <ul style={{ height: '42vh', width: '16vw', listStyle: "none", zIndex: 3000000, background: '#1F2428', color: 'silver', position: "absolute", top: 140, borderRadius: '.6em'}}>
     {compositionss.map((composition, index) => (
       <li key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button  style={{background: buttonColor(index), borderRadius: '.5em', marginTop: "6px" }}
           onClick={() => {
             setText(composition.id)
+            const index = compositionss.findIndex((comp) => comp.id.toLowerCase() === composition.id.toLowerCase());
+            setCurrentIndex(index);
             // sliderColor == "blue" ? setSliderColor('red') : setSliderColor('blue')
             index == 0 ? setSliderColor('red') :  index == 1 ? setSliderColor('blue') :  index == 2 ? setSliderColor('green') : setSliderColor('yellow')
           }}
@@ -308,7 +322,7 @@ const [theOpacity, setOpacity] = useState('')
                 durationInFrames={comp.durationInFrames}
                 fps={comp.fps}
                 width={comp.width}
-                defaultProps={{tags: compositions, text: theText}}
+                defaultProps={{tags: compositions, text: theText, index: currentIndex}}
                 height={comp.height}
               /></ClickEventContext.Provider>
             </div>
