@@ -26,6 +26,13 @@ if (localStorage.getItem('compositions')) {
     fps: 30,
     width: 1920,
     height: 1080,
+  },   {
+    id: 'trees',
+    component: Overlay,
+    durationInFrames: 75,
+    fps: 30,
+    width: 1920,
+    height: 1080,
   },]
 } else {
   // If it doesn't exist, create it with default data
@@ -62,6 +69,7 @@ if (localStorage.getItem('compositions')) {
 
 
 const [compositionss, setCompositions] = useState(compositions)
+const [theText, setText] = useState('')
 
 
   const handleChildEvent = (data) => {
@@ -116,21 +124,21 @@ console.log(localStorage.getItem('compositions'))
   const handleCompositionClick = (id, e) => {
     e.stopPropagation();
     setSelectedCompositionId(id);
-
+setText(id)
     // Set the slider color based on the selected composition
     switch (id) {
       case 'cars':
         setSliderColor('blue');
-        alert("blue")
+        setText(id)
         break;
       case 'trees':
         setSliderColor('green');
-        alert('green')
+  setText(id)
         break;
 
       case 'bus':
         setSliderColor('red');
-        alert('red')
+setText(id)
         break;
       default:
         setSliderColor('red');
@@ -179,7 +187,7 @@ console.log(localStorage.getItem('compositions'))
           borderRadius: '10px',
         }}
         onMouseDown={handleDragMouseDown}
-      >
+      >{theText}
         <div
           style={{
             position: 'absolute',
@@ -209,7 +217,7 @@ console.log(localStorage.getItem('compositions'))
                 durationInFrames={comp.durationInFrames}
                 fps={comp.fps}
                 width={comp.width}
-                defaultProps={{tags: compositions}}
+                defaultProps={{tags: compositions, text: theText}}
                 height={comp.height}
               /></ClickEventContext.Provider>
             </div>
