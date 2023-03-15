@@ -71,12 +71,16 @@ if (localStorage.getItem('compositions')) {
 const [compositionss, setCompositions] = useState(compositions)
 const [theText, setText] = useState('')
 
+const [theOpacity, setOpacity] = useState('')
+
+
+
 
   const handleChildEvent = (data) => {
     console.log('Event emitted from child:', data);
     setCompositions(data)
-localStorage.setItem('compositions', JSON.stringify(data))
-console.log(localStorage.getItem('compositions'))
+    return compositionss
+
   };
 
   const handleMouseDown = (e) => {
@@ -123,59 +127,68 @@ console.log(localStorage.getItem('compositions'))
 
   const handleCompositionClick = (id, e) => {
     e.stopPropagation();
-    setSelectedCompositionId(id);
-setText(id)
-    // Set the slider color based on the selected composition
-    switch (id) {
-      case 'cars':
-        setSliderColor('blue');
-        setText(id)
-        break;
-      case 'trees':
-        setSliderColor('green');
   setText(id)
-        break;
 
-      case 'bus':
-        setSliderColor('red');
-setText(id)
-        break;
-      default:
-        setSliderColor('red');
+  };
+
+
+  const handleDelete = (id) => {
+    // Show a confirm prompt to the user
+    const isConfirmed = window.confirm('Are you sure you want to delete this item?');
+  
+    if (isConfirmed) {
+      // If the user confirms, filter out the item with the given id and update the state
+      const updatedCompositionss = compositionss.filter((composition) => composition.id !== id);
+      setCompositions(updatedCompositionss);
     }
   };
-  // const compositions = [
-  //   {
-  //     id: 'cars',
-  //     component: Overlay,
-  //     durationInFrames: 75,
-  //     fps: 30,
-  //     width: 1920,
-  //     height: 1080,
-  //   },
-  //   {
-  //     id: 'trees',
-  //     component: Overlay,
-  //     durationInFrames: 75,
-  //     fps: 30,
-  //     width: 1920,
-  //     height: 1080,
-  //   },
+  const buttonColor = (index) => {
+    switch (index) {
+      case 0:
+        return 'red';
+      case 1:
+        return 'blue';
+      case 2:
+        return 'green';
+      default:
+        return 'yellow';
+    }
+  };
+  
 
-  //   {
-  //     id: 'bus',
-  //     component: Overlay,
-  //     durationInFrames: 75,
-  //     fps: 30,
-  //     width: 1920,
-  //     height: 1080,
-  //   },
-  //   // Add more compositions as needed
-  // ];
-
+console.log(theText)
   return (
     <div onClick={sendStuff}>
-      <div
+      {/* <div style={{height: '42vh', width: '16vw', zIndex: 3000000, background: '#1F2428', color: 'silver', position: "absolute", top: 140}}>mike</div> */}
+      <ul style={{ height: '42vh', width: '16vw', listStyle: "none", zIndex: 3000000, background: '#1F2428', color: 'silver', position: "absolute", top: 140 }}>
+    {compositionss.map((composition, index) => (
+      <li key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <button  style={{background: buttonColor(index), borderRadius: '.5em', marginTop: "6px" }}
+          onClick={() => {
+            setText(composition.id)
+            // sliderColor == "blue" ? setSliderColor('red') : setSliderColor('blue')
+            index == 0 ? setSliderColor('red') :  index == 1 ? setSliderColor('blue') :  index == 2 ? setSliderColor('green') : setSliderColor('yellow')
+          }}
+        >
+          {composition.id}
+        </button>
+        <button
+          onClick={() => handleDelete(composition.id)}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'silver',
+            fontSize: '18px',
+            cursor: 'pointer',
+            padding: '0 10px',
+          }}
+        >
+          X
+        </button>
+      </li>
+    ))}
+  </ul>
+      <div id='slider'
         style={{
           position: 'absolute',
           zIndex: 3000,
@@ -185,6 +198,7 @@ setText(id)
           height: '3rem',
           backgroundColor: sliderColor,
           borderRadius: '10px',
+          opacity: theText ? 1 : 0
         }}
         onMouseDown={handleDragMouseDown}
       >{theText}
