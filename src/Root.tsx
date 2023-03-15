@@ -3,37 +3,111 @@ import { Composition, Folder } from 'remotion';
 import { Overlay } from './Overlay';
 
 import ClickEventContext from './ClickEventContext';
+let compositions = []
+if (localStorage.getItem('compositions')) {
+  // // If it exists, use the existing data
+  // compositions = JSON.parse(localStorage.getItem('compositions'));
+  // let mycompositions = JSON.parse(localStorage.getItem('compositions'));
+  // console.log(mycompositions)
+  compositions = [
+    {
+      id: 'cars',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    {
+      id: 'trees',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    {
+      id: 'bus',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    // Add more compositions as needed
+  ];
+} else {
+  // If it doesn't exist, create it with default data
+  compositions = [
+    {
+      id: 'cars',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    {
+      id: 'trees',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    {
+      id: 'bus',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    // Add more compositions as needed
+  ];
+
+  localStorage.setItem('compositions', JSON.stringify(compositions));
+}
+
 
 export const RemotionRoot: React.FC = () => {
   const [width, setWidth] = useState(200);
-  const [left, setLeft] = useState(229);
+  const [left, setLeft] = useState(240);
   const [selectedCompositionId, setSelectedCompositionId] = useState(null);
   const [sliderColor, setSliderColor] = useState('red');
-
-  localStorage.setItem('myKey', 'myValue');
-  const myValue = localStorage.getItem('myKey');
-console.log(myValue); // Output: "myValue"
-let compositions = [];
-
 // Check if 'compositions' item exists in Local Storage
 if (localStorage.getItem('compositions')) {
   // // If it exists, use the existing data
   // compositions = JSON.parse(localStorage.getItem('compositions'));
-  compositions = [{
-    id: 'cars',
-    component: Overlay,
-    durationInFrames: 75,
-    fps: 30,
-    width: 1920,
-    height: 1080,
-  },   {
-    id: 'trees',
-    component: Overlay,
-    durationInFrames: 75,
-    fps: 30,
-    width: 1920,
-    height: 1080,
-  },]
+  // let mycompositions = JSON.parse(localStorage.getItem('compositions'));
+  // console.log(mycompositions)
+  compositions = [
+    {
+      id: 'cars',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    {
+      id: 'trees',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    {
+      id: 'bus',
+      component: Overlay,
+      durationInFrames: 75,
+      fps: 30,
+      width: 1920,
+      height: 1080,
+    },
+    // Add more compositions as needed
+  ];
 } else {
   // If it doesn't exist, create it with default data
   compositions = [
@@ -76,9 +150,11 @@ const [theOpacity, setOpacity] = useState('')
 
 
 
-  const handleChildEvent = (data) => {
+  const handleChildEvent = (data, sliderValues, currentId) => {
     console.log('Event emitted from child:', data);
     setCompositions(data)
+
+
     return compositionss
 
   };
@@ -100,6 +176,7 @@ const [theOpacity, setOpacity] = useState('')
   const handleMouseUp = () => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
+    console.log(`Slider start position: ${left}px, end position: ${left + width}px`);
   };
   
   const handleDragMouseDown = (e) => {
@@ -112,12 +189,14 @@ const [theOpacity, setOpacity] = useState('')
     const newLeft = e.clientX - width / 2;
     if (newLeft >= 229 && newLeft + width <= window.innerWidth) {
       setLeft(newLeft);
+      console.log(`Slider start position: ${left}px, end position: ${left + width}px`);
     }
   };
   
   const handleDragMouseUp = () => {
     document.removeEventListener('mousemove', handleDragMouseMove);
     document.removeEventListener('mouseup', handleDragMouseUp);
+    console.log(`Slider start position: ${left}px, end position: ${left + width}px`);
   };
 
   const sendStuff = () => {
@@ -155,12 +234,10 @@ const [theOpacity, setOpacity] = useState('')
     }
   };
   
-
-console.log(theText)
   return (
     <div onClick={sendStuff}>
       {/* <div style={{height: '42vh', width: '16vw', zIndex: 3000000, background: '#1F2428', color: 'silver', position: "absolute", top: 140}}>mike</div> */}
-      <ul style={{ height: '42vh', width: '16vw', listStyle: "none", zIndex: 3000000, background: '#1F2428', color: 'silver', position: "absolute", top: 140 }}>
+      <ul style={{ height: '42vh', width: '16vw', listStyle: "none", zIndex: 3000000, background: '#1F2428', color: 'silver', position: "absolute", top: 140, borderRadius: '.6em', opacity: 0.9}}>
     {compositionss.map((composition, index) => (
       <li key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button  style={{background: buttonColor(index), borderRadius: '.5em', marginTop: "6px" }}
@@ -192,7 +269,7 @@ console.log(theText)
         style={{
           position: 'absolute',
           zIndex: 3000,
-          top: 570,
+          top: 620,
           left,
           width,
           height: '3rem',
@@ -216,7 +293,7 @@ console.log(theText)
           onMouseDown={handleMouseDown}
         ></div>
       </div>
-      <div style={{}}onClick={(e) => { alert('balls'); e.stopPropagation()}}>
+      <div style={{}}onClick={(e) => {  e.stopPropagation()}}>
         <Folder name="Videos">
           {compositionss.map((comp) => (
             <div

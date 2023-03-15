@@ -27,9 +27,7 @@ const disappearBeforeEnd = 20;
 const overlayStartTime = 10;
 
 
-export const Overlay = ({ tags }) => {
-
-  console.log(tags, 'tags')
+export const Overlay = ({ tags, theText }) => {
 
   const [first, setFirst] = useState(0);
   const [myVideoDuration, setMyVideoDuration] = useState(75);
@@ -61,7 +59,8 @@ useEffect(() => {
 
   onEventEmit(arrayOfTags)
 
-  return () => {
+
+  return () => {  arrayOfTags.length ? console.log(arrayOfTags, '<-- all tags') : ''
     document.removeEventListener('click', () =>onEventEmit(arrayOfTags));
   };
 }, [arrayOfTags]);
@@ -141,11 +140,6 @@ useEffect(() => {
 
 
   const tagChange = frame >= overlayStartTime && frame < overlayStartTime + disappearBeforeEnd;
-
-  
-  useEffect(() => {
- arrayOfTags.length ? console.log(arrayOfTags, '<-- all tags') : ''
-  }, [arrayOfTags]);
   
   
   return (
