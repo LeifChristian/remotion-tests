@@ -4,7 +4,7 @@ import { Overlay } from './Overlay';
 
 export const RemotionRoot: React.FC = () => {
   const [width, setWidth] = useState(200);
-  const [left, setLeft] = useState(300);
+  const [left, setLeft] = useState(229);
 
   const handleMouseDown = (e) => {
     e.stopPropagation();
@@ -33,7 +33,7 @@ export const RemotionRoot: React.FC = () => {
   
   const handleDragMouseMove = (e) => {
     const newLeft = e.clientX - width / 2;
-    if (newLeft >= 300 && newLeft + width <= window.innerWidth) {
+    if (newLeft >= 229 && newLeft + width <= window.innerWidth) {
       setLeft(newLeft);
     }
   };
